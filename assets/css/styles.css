@@ -10291,7 +10291,7 @@ body {
 
 #notfound{
 
-  background-image:url(../../assets/img/nodata.svg);
+  background-image:url(../assets/img/nodata.svg);
   background-repeat: no-repeat;
   background-size: 800px 100%;
   background-position: 50% 0;
@@ -10301,7 +10301,7 @@ body {
 }
 #notfound1{
 
-  background-image:url(../../assets/img/calnder.svg);
+  background-image:url(../assets/img/calnder.svg);
   background-repeat: no-repeat;
   background-size: 800px 100%;
   background-position: 50% 0;

@@ -29,6 +29,16 @@ include 'core/register.php';
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Patient Sign In</h3></div>
                             <div class="card-body">
+                                <div>
+                                    <?php if (!empty($msg)): ?>
+                                        <div class="alert <?php echo $msg_class ?> alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <?php echo $msg; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                                 <form action=""  method="POST" >
 <div class="row">
     <div class="col-6">
@@ -98,10 +108,10 @@ include 'core/register.php';
         </main>
     </div>
     <div id="layoutAuthentication_footer">
-        <?php include '../navs/footer.php'?>
+
     </div>
 </div>
-<?php include '../styles/js.php' ?>
+<?php include 'resources/scripts.php' ?>
 </body>
 
 </html>

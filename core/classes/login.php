@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD']==="POST"){
                         if (password_verify($password,$user->password)){
                             session_regenerate_id();
                             $_SESSION['userID']=$user->userID;
-                            $_SESSION['name']=$user->name;
+
+                            $_SESSION['name']=$user->fname;
 $userObj->redirect("/home.php");
 
                         }else{

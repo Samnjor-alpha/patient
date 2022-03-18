@@ -1,217 +1,173 @@
-'use strict';
-//buttons
+(function () {
+	"use strict";
 
-let callBtn    =$('#callBtn');
-let callBox    =$('#callBox');
-let answerBtn  =$('#answerBtn');
-let declineBtn =$('#declineBtn');
-let timerlabel= $('#callTimer');
-let alertBox= $('#alertBox');
-let pc;
-let sendTo =callBtn.data('user');
-let localStream;
+	//===== Preloader
 
-//video elements
-const  remoteVideo = document.querySelector("#remoteVideo");
-const  localVideo = document.querySelector("#localVideo");
+	window.onload = function () {
+		window.setTimeout(fadeout, 500);
+	}
 
-//media info
-const mediaConst = {
-  video:true,
-    audio:true
-};
-const config ={
-    iceServers:[
-        {urls:'stun:stun1.l.google.com:19302'},
-    ]
-}
-const options = {
-   offerToReceiveVideo:1,
-    offerToReceiveAudio:1
-}
-function getConn(){
-    if (!pc){
-        pc= new RTCPeerConnection(config);
-    }
-}
-//ask media output
-async function getCam() {
-    let mediaStream;
-    try {
-        if (!pc) {
-            await getConn();
-        }
-        mediaStream = await navigator.mediaDevices.getUserMedia(mediaConst);
-        localVideo.srcObject = mediaStream;
-        localStream = mediaStream;
-        localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
-    } catch (error) {
-        console.log(error)
-    }
-}
-async function createOffer(sendTo){
-    await sendIceCandidate(sendTo);
-    await pc.createOffer(options);
-    await pc.setLocalDescription(pc.localDescription);
-    send('client-offer',pc.localDescription,sendTo)
-}
-async  function createAnswer(sendTo,data){
-    if (!pc){
-        await getConn();
-    }
-    if (!localStream){
-        await getCam();
-    }
-    await  sendIceCandidate(sendTo);
-    await pc.setRemoteDescription(data);
-    await pc.createAnswer();
-    await pc.setLocalDescription(pc.localDescription);
-    send('client-answer',pc.localDescription,sendTo);
-}
-function sendIceCandidate(sendTo){
-    pc.onicecandidate =e =>{
-        if (e.candidate!==null){
-            //sendice candidate to tother candidate
-            send('client-candidate',e.candidate,sendTo);
-        }
-    }
-    pc.ontrack  = e =>{
-        $('#video').removeClass('hidden');
-        $('#profile').addClass('hidden');
-        remoteVideo.srcObject = e.streams[0];
+	function fadeout() {
+		document.querySelector('.preloader').style.opacity = '0';
+		document.querySelector('.preloader').style.display = 'none';
+	}
 
-    }
-}
-  function hangup(){
-    send('client-hangup',null,sendTo);
-    pc.close();
-    pc= null
-  }
-$('#hangupBtn').on('click',() =>{
-hangup();
-location.reload();
-    });
-callBtn.on('click',() =>{
-    getCam();
-    send('is-client-ready',null,sendTo);
-});
-conn.onopen = e=>{
-    console.log('connected to websocket');
-}
+
+	/*=====================================
+	Sticky
+	======================================= */
+	window.onscroll = function () {
+		var header_navbar = document.querySelector(".navbar-area");
+		var sticky = header_navbar.offsetTop;
+
+		if (window.pageYOffset > sticky) {
+			header_navbar.classList.add("sticky");
+		} else {
+			header_navbar.classList.remove("sticky");
+		}
 
 
 
-conn.onmessage = async e =>{
-    let message= JSON.parse(e.data);
-    let by =message.by;
-    let data =message.data;
-    let type =message.type;
-    let profileImage =message.profileImage;
-    let username =message.username;
-    $('#username').text(username);
-    $('#profileImage').attr('src',profileImage);
+		// show or hide the back-top-top button
+		var backToTo = document.querySelector(".scroll-top");
+		if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+			backToTo.style.display = "block";
+		} else {
+			backToTo.style.display = "none";
+		}
+	};
 
-    switch (type){
-        case 'client-candidate':
-            if (!pc.localDescription){
-                await pc.addIceCandidate(new RTCIceCandidate(data));
-            }
-            break;
-        case 'client-answer':
-            if (pc.localDescription){
-                await pc.setRemoteDescription(data);
-                timerlabel.timer({format:'%m:%s'});
-            }
-            break;
-        case 'is-client-ready':
-            if (!pc){
-                await getConn();
-            }
-            if (pc.iceConnectionState ==="connected"){
-                send('client-already-oncall',null,by);
-            }else{
-                displayCall();
-                if(window.location.href.indexOf(username)> -1){
-                    answerBtn.on('click',()=>{
-                        callBox.addClass('hidden');
-                        $('.wrapper').removeClass('glass');
-                        send('client-is-ready',null,sendTo);
-                    });
-                }else{
-                    answerBtn.on('click',()=>{
-                        callBox.addClass('hidden');
-                       redirectToCall(username, by)
-                    });
-                }
+	// Get the navbar
 
 
-                declineBtn.on('click',()=>{
-                    send('client-rejected', null , sendTo);
-                    location.reload(true);
-                });
-            }
-            break;
-        case'client-offer':
-             await createAnswer(sendTo, data);
-            timerlabel.timer({format:'%m:%s'});
-            break;
-        case 'client-is-ready':
-             await createOffer(sendTo);
-            break;
-        case 'client-already-oncall':
-            displayAlert(username,profileImage,'is on another call');
-            setTimeout('window.location.reload()',2000);
-            break;
-        case 'client-rejected':
-            displayAlert(username,profileImage,'user is busy');
-            break;
-        case 'client-hangup':
-        displayAlert(username,profileImage,'Disconnected the call');
-            setTimeout('window.location.reload()',2000);
-            break;
+	// for menu scroll
+	var pageLink = document.querySelectorAll('.page-scroll');
 
-    }
-}
-function send(type,data, sendTo){
-    conn.send(JSON.stringify({
-        sendTo:sendTo,
-        type:type,
-        data:data
+	pageLink.forEach(elem => {
+		elem.addEventListener('click', e => {
+			e.preventDefault();
+			document.querySelector(elem.getAttribute('href')).scrollIntoView({
+				behavior: 'smooth',
+				offsetTop: 1 - 60,
+			});
+		});
+	});
 
-    }));
+	// section menu active
+	function onScroll(event) {
+		var sections = document.querySelectorAll('.page-scroll');
+		var scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
 
-}
-send('is-client-is-ready',null,sendTo);
-function displayCall() {
-callBox.removeClass('hidden');
-    $('.wrapper').addClass('glass');
-}
-function displayAlert(username,profileImage,message){
-    alertBox.find('#alertName').text(username);
-    alertBox.find('#alertImage').attr('src',profileImage);
-    alertBox.find('#alertMessage').text(message);
-    alertBox.removeClass('hidden');
-    $('.wrapper').addClass('glass');
-    $('#video').addClass('hidden');
-    $('#profile').removeClass('hidden');
-}
-function  redirectToCall(username,sendTo) {
-    if (window.location.href.indexOf(username) === -1) {
-        sessionStorage.setItem('redirect', true);
-        sessionStorage.setItem('sendTo',sendTo);
-        window.location.href='/chat/'+username;
+		for (var i = 0; i < sections.length; i++) {
+			var currLink = sections[i];
+			var val = currLink.getAttribute('href');
+			var refElement = document.querySelector(val);
+			var scrollTopMinus = scrollPos + 73;
+			if (refElement.offsetTop <= scrollTopMinus && (refElement.offsetTop + refElement.offsetHeight > scrollTopMinus)) {
+				document.querySelector('.page-scroll').classList.remove('active');
+				currLink.classList.add('active');
+			} else {
+				currLink.classList.remove('active');
+			}
+		}
+	};
 
-    }
-}
-if (sessionStorage.getItem('redirect')){
-    sendTo=sessionStorage.getItem('sendTo');
-    let waitForWs = setInterval(() =>{
-        if(conn.readyState === 1){
-            send('client-is-ready',null,sendTo);
-            clearInterval(waitForWs);
-        }
-    },500);
-    sessionStorage.removeItem('redirect');
-    sessionStorage.removeItem('sendTo');
+	window.document.addEventListener('scroll', onScroll);
 
-}
+
+	//===== close navbar-collapse when a  clicked
+	let navbarToggler = document.querySelector(".navbar-toggler");
+	var navbarCollapse = document.querySelector(".navbar-collapse");
+
+	document.querySelectorAll(".page-scroll").forEach(e =>
+		e.addEventListener("click", () => {
+			navbarToggler.classList.remove("active");
+			navbarCollapse.classList.remove('show')
+		})
+	);
+	navbarToggler.addEventListener('click', function () {
+		navbarToggler.classList.toggle("active");
+	})
+
+	//======= tiny slider for slider-active
+	tns({
+		container: '.slider-active',
+		items: 1,
+		slideBy: 'page',
+		autoplay: true,
+		mouseDrag: true,
+		gutter: 0,
+		nav: true,
+		controls: false,
+		autoplayButtonOutput: false,
+	});
+
+	//======== tiny slider for testimonial
+	tns({
+		slideBy: 'page',
+		autoplay: false,
+		mouseDrag: true,
+		gutter: 0,
+		nav: true,
+		controls: false,
+		"container": "#customize",
+		"items": 1,
+		"center": true,
+		"navContainer": "#customize-thumbnails",
+		"navAsThumbnails": true,
+		"autoplayTimeout": 5000,
+		"swipeAngle": false,
+		"speed": 400,
+	});
+
+	//======== WOW active
+	new WOW().init();
+
+	//======== tiny slider for team active
+	tns({
+		container: '.team-active',
+		items: 4,
+		slideBy: 'page',
+		autoplay: false,
+		mouseDrag: true,
+		gutter: 15,
+		nav: true,
+		controls: false,
+		responsive: {
+			0: {
+				items: 1,
+			},
+			768: {
+				items: 2,
+			},
+			992: {
+				items: 3,
+			},
+			1200: {
+				items: 4,
+			},
+		}
+	});
+
+
+	//========= glightbox
+	const myGallery = GLightbox({
+		'href': 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+		'type': 'video',
+		'source': 'youtube', //vimeo, youtube or local
+		'width': 900,
+		'autoplayVideos': true,
+	});
+
+	//======== select js
+	new Selectr('#doctor', {
+		searchable: false,
+		width: 300
+	});
+
+	//======== datepicker
+	var picker = new Pikaday({
+		field: document.getElementById('input_date')
+	});
+
+})();	

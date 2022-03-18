@@ -1,6 +1,7 @@
 <?php
 include 'core/init.php';
-?>
+include "core/classes/login.php"; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,26 +28,33 @@ include 'core/init.php';
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Patient Sign In</h3></div>
                             <div class="card-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                        <input class="form-control py-4" id="inputEmailAddress" type="email" placeholder="Enter email address" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="small mb-1" for="inputPassword">Password</label>
-                                        <input class="form-control py-4" id="inputPassword" type="password" placeholder="Enter password" />
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox">
-                                            <a class="small" href="">Forgot Password?</a>
+                                <div>
+                                    <?php if (!empty($msg)): ?>
+                                        <div class="alert <?php echo $msg_class ?> alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <?php echo $msg; ?>
                                         </div>
+                                    <?php endif; ?>
+                                </div>
+                                <form action=""  method="POST"  class="contact-form">
+
+                                    <div class="form-group">
+
+                                        <input type="email" required class="form-control form-control-lg" value="<?= isset($_POST['email']) ? $_POST['email'] : ''; ?>" name="email" placeholder="Email">
                                     </div>
-                                    <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
 
-                                        <a class="btn  btn-block btn-lg btn-primary" href="">Login</a>
+                                    <div class="form-group">
+
+                                        <input type="password" required class="form-control form-control-lg" name="password" placeholder="Password">
+                                        <a class="text-info" href="forgot-password.php">
+                                            Forgot Password ?
+                                        </a>
                                     </div>
 
 
+                                   <button type="submit" name="login" class="btn btn-block btn-primary">Login</button>
 
                                 </form>
 
@@ -63,10 +71,10 @@ include 'core/init.php';
         </main>
     </div>
     <div id="layoutAuthentication_footer">
-        <?php include '../navs/footer.php'?>
+
     </div>
 </div>
-<?php include '../styles/js.php' ?>
+<?php include 'resources/scripts.php' ?>
 </body>
 
 </html>
