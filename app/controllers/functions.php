@@ -172,7 +172,7 @@ function countfeedbacks($id){
 }
 function countinvoice($id){
     global $connn;
-    $countinvoices=mysqli_query($connn," select count(*) as total_invo from payments where status='0'");
+    $countinvoices=mysqli_query($connn," select count(*) as total_invo from payments where status='0' and pnt_id='$id'");
     return mysqli_fetch_assoc($countinvoices)["total_invo"];
 
 
