@@ -21,7 +21,7 @@ function getSessionID(){
      return session_id();
 }
 public function emailExist($email){
-     $stmt=$this->db->prepare("SELECT * FROM users where email=:email");
+     $stmt=$this->db->prepare("SELECT * FROM users where email=:email and type='patient'");
      $stmt->bindParam(":email",$email,PDO::PARAM_STR);
      $stmt->execute();
      $user=$stmt->fetch(PDO::FETCH_OBJ);

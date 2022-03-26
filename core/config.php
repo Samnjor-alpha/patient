@@ -1,5 +1,5 @@
 <?php
-const BASE_URL = 'https://localhost/patient';
+const BASE_URL = 'https://localhost/hospital/patient';
 
 const USER = "root";
 const HOST = "localhost";

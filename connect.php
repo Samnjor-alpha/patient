@@ -112,7 +112,7 @@ $rowdname=mysqli_fetch_assoc($getdrname);
             <div class="text-center mt-5">
                 <h2 class="text-center"><?php echo $rowdname['doctorName']?></h2>
                 <p>Do you want to make a Call?</p>
-                <button id="callBtn" data-user="<?php echo $rowvuser['userID'];?>" class="btn btn-success"><i class=""></i></button>
+                <button id="callBtn" data-user="<?php echo $rowvuser['userID'];?>" class="btn btn-success"><i class="fas fa-video"></i></button>
             </div>
         </div>
     </div>

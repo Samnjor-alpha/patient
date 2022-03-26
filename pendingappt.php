@@ -1,29 +1,27 @@
 <?php
-include '../database/config.php';
-include '../app/sessions/session.php';
-include '../app/controllers/pendingappnts.php';
-include '../app/controllers/functions.php'
+include 'core/config.php';
+include 'app/sessions/session.php';
+include 'app/controllers/pendingappnts.php';
+include 'app/controllers/functions.php'
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Book Appointment</title>
-    <?php include '../resources/dashboard-styles.php' ?>
+    <?php include 'styles/css.php'?>
 </head>
 <body class="sb-nav-fixed">
-<?php include '../resources/topbar.php'?>
+<?php include 'navs/top-bar.php'?>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
-        <?php include '../resources/usersidebar.php'?>
+        <?php include 'navs/sidebar.php'?>
     </div>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
-                <h1 class="mt-4"><?php echo user_dashboard?></h1>
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Pending Appointments</li>
-                </ol>
+
+
                 <div class="row">
                     <div class="float-left">
                         <div class="btn-group">
@@ -65,13 +63,15 @@ include '../app/controllers/functions.php'
 
                     while($row=mysqli_fetch_array($appnts))
                     {
+                        us_checkifappoinmentexpired($row['id'],$row['doctorId'])
                         ?>
 
                         <tr>
+
                             <td class="center"><?php echo $cnt;?>.</td>
                             <td class=" text-capitalize"><?php echo docname($row['doctorId']);?></td>
                             <td><?php echo $row['doctorSpecialization'];?></td>
-                            <td><?php echo currency.' '. formatMoney($row["consultancyFees"],true);?></td>
+                            <td><?php echo  formatMoney($row["consultancyFees"],true);?></td>
                             <td><?php echo
                                 formatAppointment($row['appointmentDate']);?>
                                  <?php echo
@@ -131,9 +131,9 @@ include '../app/controllers/functions.php'
             </div>
             <?php } ?>
         </main>
-        <?php include '../resources/dashfooter.php'?>
+
     </div>
 </div>
-<?php include '../resources/dashboard-scripts.php'?>
+<?php include 'styles/scripts.php'?>
 </body>
 </html>

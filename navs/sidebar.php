@@ -31,7 +31,7 @@
                     <i class="fas fa-comment-medical"></i>
                 </div>
                 Feedbacks
-<!--                &nbsp;<span class="badge badge-pill badge-primary">--><?php //echo countfeedbacks($_SESSION['p_id'])?><!--</span>-->
+                &nbsp;<span class="badge badge-pill badge-primary"><?php echo countfeedbacks($_SESSION['userID'])?></span>
             </a>
             <div class="sb-sidenav-menu-heading">Invoice </div>
             <a class="nav-link" href="<?php echo BASE_URL?>/invoice.php">
@@ -39,8 +39,8 @@
                     <i class="fas fa-file-invoice"></i>
                 </div>
                 Invoice  &nbsp;
-<!--                <span class="badge badge-pill badge-primary">-->
-<!--                    --><?php //echo countinvoice($_SESSION['userID']) ?><!--</span>-->
+                <span class="badge badge-pill badge-primary">
+                    <?php echo countinvoice($_SESSION['userID']) ?></span>
             </a>
             <div class="sb-sidenav-menu-heading">FAQ </div>
             <a class="nav-link" href="<?php echo BASE_URL?>/faqask.php">
@@ -49,7 +49,12 @@
                 </div>
                 Ask Question
             </a>
-
+            <a class="nav-link" href="<?php echo BASE_URL?>/chat/home.php">
+                <div class="sb-nav-link-icon">
+                    <i class="far fa-question-circle"></i>
+                </div>
+           Call
+            </a>
 
         </div>
         <div class="sb-sidenav-footer">
